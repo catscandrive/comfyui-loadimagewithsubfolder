@@ -27,6 +27,9 @@ class ImageLoader:
                 folder_path = os.path.relpath(os.path.join(root, dir), start=input_dir)
                 folder_path = folder_path.replace("\\", "/")
                 folder_list.append(folder_path)
+ 
+        folder_list.append(input_dir.replace("\\", "/"))
+
 
         return {
             "required": {
