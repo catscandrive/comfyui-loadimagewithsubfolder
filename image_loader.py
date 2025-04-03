@@ -15,14 +15,28 @@ from server import PromptServer
 class ImageLoader:
     @classmethod
     def INPUT_TYPES(s):
+        input_dir = folder_paths.get_input_directory()
+        exclude_folders = ["clipspace", "folder_to_exclude2"]
+        folder_list = []
+
+        for root, dirs, files in os.walk(input_dir):
+            # Exclude specific folders
+            dirs[:] = [d for d in dirs if d not in exclude_folders]
+
+            for dir in dirs:
+                folder_path = os.path.relpath(os.path.join(root, dir), start=input_dir)
+                folder_path = folder_path.replace("\\", "/")
+                folder_list.append(folder_path)
+
         return {
             "required": {
-                "subfolder": ("STRING", {"default": ""}),
+                "subfolder": (sorted(folder_list), {"default": ""}),
                 "image": ([], {"image_upload": True})
             }
         }
 
     CATEGORY = "image"
+
 
     RETURN_TYPES = ("IMAGE", "MASK")
     FUNCTION = "load_image"
